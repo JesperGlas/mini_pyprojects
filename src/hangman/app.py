@@ -8,29 +8,85 @@ from typing import List
 from random import randint
 
 WORDS: List[str] = ['helloworld', 'python', 'syntax', 'pythonprojects']
+HANGMANPICS = ['''
+  +---+
+  |   |
+      |
+      |
+      |
+      |
+=========''', '''
+  +---+
+  |   |
+  O   |
+      |
+      |
+      |
+=========''', '''
+  +---+
+  |   |
+  O   |
+  |   |
+      |
+      |
+=========''', '''
+  +---+
+  |   |
+  O   |
+ /|   |
+      |
+      |
+=========''', '''
+  +---+
+  |   |
+  O   |
+ /|\  |
+      |
+      |
+=========''', '''
+  +---+
+  |   |
+  O   |
+ /|\  |
+ /    |
+      |
+=========''', '''
+  +---+
+  |   |
+  O   |
+ /|\  |
+ / \  |
+      |
+=========''']
 
 def main():
     print('Welcome to Hangman!')
-    loop('helloworld')
+    index: int = randint(0, len(WORDS))
+    loop(WORDS[index])
 
 def loop(word: str) -> str:
     tested: List[str] = []
     done: bool = False
     state: str = '_'*len(word)
-    wrong: int = 0
+    misses: int = 0
 
     while not done:
+        hangman_ascii(misses)
         print(f'{state}')
         print(f'Tested: {", ".join(tested)}')
-        print(f'Errors: {wrong}')
+        print(f'Misses: {misses}')
         letter = user_input(tested)
         tested.append(letter)
         state = update(letter, word, state)
-        wrong += 0 if correct(letter, word) else 1
+        misses += 0 if correct(letter, word) else 1
 
-        done = True if state == word else False
+        done = True if state == word or misses == len(HANGMANPICS)-1 else False
 
-    print('Congratulations! You did it!')
+    if state == word:
+        print('Congratulations! You did it!')
+    else:
+        print('Better luck next time..')
+        hangman_ascii(misses)
 
 def user_input(tested: List[str]) -> str:
     valid_input: bool = False
@@ -61,6 +117,13 @@ def update(letter: str, word: str, state: str) -> str:
         new_state[i] = letter if char == letter else state[i]
     
     return ''.join(new_state)
+
+def hangman_ascii(misses: int) -> None:
+    index: int = misses if misses < len(HANGMANPICS) else len(HANGMANPICS) - 1
+    print(HANGMANPICS[index])
+
+def lost(misses: int) -> bool:
+    return False if misses < len(HANGMANPICS) else True
 
 
 if __name__ == '__main__':
