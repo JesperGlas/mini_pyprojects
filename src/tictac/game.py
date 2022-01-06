@@ -1,5 +1,5 @@
 
-from player import Player
+from player import ComputerPlayer, Player
 from board import Board
 from typing import List, Tuple
 
@@ -7,7 +7,7 @@ def main():
     print('Tic-Tac')
 
     board: Board = Board(4)
-    p: Tuple[Player, Player] = Player('o'), Player('x')
+    p: Tuple[Player, Player] = Player('o'), ComputerPlayer('x')
     current_player: int = 0
     current_move: int = None
     status: int = -1
